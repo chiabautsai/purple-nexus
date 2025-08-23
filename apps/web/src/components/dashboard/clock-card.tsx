@@ -36,7 +36,7 @@ export function ClockCard() {
         </CardTitle>
       </CardHeader>
       <CardContent className="text-center lg:p-6">
-        <div className="text-8xl font-bold text-primary mb-4">
+        <div className="text-6xl font-bold text-primary mb-4 lg:text-7xl">
           {formatTime(currentTime)}
         </div>
         <div className="text-xl text-muted-foreground">
