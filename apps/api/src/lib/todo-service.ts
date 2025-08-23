@@ -83,4 +83,5 @@ class TodoService {
   }
 }
 
-export { Todo, TodoService };
+export type { Todo };
+export { TodoService };

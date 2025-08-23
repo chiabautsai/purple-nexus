@@ -52,7 +52,7 @@ function SystemStatusCardContent() {
     routerError,
     vpnError,
     isLoading,
-    hasError,
+    // hasError,
   } = useOpenWrtData();
 
   const vpnStatusMutation = useMutation({
