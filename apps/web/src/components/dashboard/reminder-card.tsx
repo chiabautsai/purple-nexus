@@ -163,7 +163,7 @@ export function ReminderCard() {
         {isLoading ? (
           <p className="text-muted-foreground">Loading todos...</p>
         ) : error ? (
-          <p className="text-red-500">Failed to load todos</p>
+          <p className="text-muted-foreground">Failed to load todos</p>
         ) : todos.length === 0 ? (
           <p className="text-muted-foreground">
             {showPendingOnly ? "No pending todos found" : "No todos found"}
