@@ -3,7 +3,7 @@ import { EventEmitter } from "events";
 
 export class MpvService extends EventEmitter {
   private mpv: MPV;
-  private isInitialized: boolean = false;
+  //   private isInitialized: boolean = false;
 
   constructor(options = { audio_only: true }, mpvArgs: string[] = []) {
     super();
@@ -40,7 +40,7 @@ export class MpvService extends EventEmitter {
     });
 
     this.mpv.on("quit", () => {
-      this.isInitialized = false;
+      //   this.isInitialized = false;
       this.emit("quit");
     });
   }
@@ -59,7 +59,7 @@ export class MpvService extends EventEmitter {
     if (!this.mpv.isRunning()) {
       try {
         await this.mpv.start();
-        this.isInitialized = true;
+        // this.isInitialized = true;
       } catch (error) {
         throw new Error(`Failed to start MPV: ${error}`);
       }
@@ -69,7 +69,7 @@ export class MpvService extends EventEmitter {
   async quit(): Promise<void> {
     try {
       await this.mpv.quit();
-      this.isInitialized = false;
+      //   this.isInitialized = false;
     } catch (error) {
       throw new Error(`Failed to quit MPV: ${error}`);
     }
