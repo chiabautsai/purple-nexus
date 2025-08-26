@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { trpcClient } from "@/lib/trpc";
 
-import { Music, Play, Pause, SkipForward, SkipBack } from "lucide-react";
+import {
+  Music,
+  Play,
+  Pause,
+  Square,
+  SkipForward,
+  SkipBack,
+} from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
@@ -14,7 +21,7 @@ interface MpvStatus {
   "playlist-count"?: number;
   filename?: string;
   path?: string;
-  paused?: string;
+  pause?: boolean;
   "media-title"?: string;
   duration?: number;
   volume?: number;
@@ -69,6 +76,8 @@ export function EntertainmentCard() {
     retry: false, // Avoid retrying on socket errors
   });
 
+  const isPlaying = mpvStatus.pause === false && mpvStatus.path;
+
   const allPropertiesQuery = useQuery({
     queryKey: ["mpv.allProperties"],
     queryFn: () =>
@@ -79,6 +88,7 @@ export function EntertainmentCard() {
           "playlist-pos",
           "playlist-count",
           "path",
+          "pause",
           "volume",
         ],
       }),
@@ -131,6 +141,12 @@ export function EntertainmentCard() {
     mutationFn: async () => await trpc.pause.mutate(),
     onSuccess: () => console.log("Paused"),
     onError: (err) => console.error("Pause error:", err),
+  });
+
+  const stopMutation = useMutation({
+    mutationFn: async () => await trpc.stop.mutate(),
+    onSuccess: () => console.log("Stopped"),
+    onError: (err) => console.error("Stop error:", err),
   });
 
   const nextMutation = useMutation({
@@ -186,19 +202,29 @@ export function EntertainmentCard() {
           >
             <SkipBack className="h-4 w-4" />
           </Button>
+          {isPlaying ? (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => pauseMutation.mutate()}
+            >
+              <Pause className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => playMutation.mutate()}
+            >
+              <Play className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             variant="outline"
             size="icon"
-            onClick={() => pauseMutation.mutate()}
+            onClick={() => stopMutation.mutate()}
           >
-            <Pause className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={() => playMutation.mutate()}
-          >
-            <Play className="h-4 w-4" />
+            <Square className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
