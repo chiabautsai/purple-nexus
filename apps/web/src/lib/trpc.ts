@@ -7,8 +7,13 @@ import {
 
 import type { AppRouter } from "@purple-nexus/api/router";
 
+const getApiBaseUrl = () => {
+  const { protocol, hostname } = window.location;
+  return `${protocol}//${hostname}`;
+};
+
 const wsClient = createWSClient({
-  url: "ws://localhost:2022",
+  url: `${getApiBaseUrl().replace(/^http/, "ws")}:2022`,
 });
 
 export const trpcClient = createTRPCClient<AppRouter>({
@@ -16,6 +21,6 @@ export const trpcClient = createTRPCClient<AppRouter>({
     wsLink({
       client: wsClient,
     }),
-    httpBatchLink({ url: "http://localhost:2022" }),
+    httpBatchLink({ url: `${getApiBaseUrl()}:2022` }),
   ],
 });
