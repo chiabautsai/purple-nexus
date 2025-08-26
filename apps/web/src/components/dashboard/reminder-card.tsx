@@ -32,6 +32,8 @@ export function ReminderCard() {
       showPendingOnly
         ? trpcClient.getPendingTodos.query()
         : trpcClient.getAllTodos.query(),
+    refetchInterval: 1000 * 5,
+    retry: false,
   });
 
   const createTodoMutation = useMutation({
