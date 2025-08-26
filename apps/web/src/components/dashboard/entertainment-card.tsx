@@ -76,7 +76,8 @@ export function EntertainmentCard() {
     retry: false, // Avoid retrying on socket errors
   });
 
-  const isPlaying = mpvStatus.pause === false && mpvStatus.path;
+  const isPlaying =
+    mpvStatus.pause === false && (mpvStatus["playlist-pos"] ?? -1) >= 0;
 
   const allPropertiesQuery = useQuery({
     queryKey: ["mpv.allProperties"],
