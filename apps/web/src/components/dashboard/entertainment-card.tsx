@@ -5,7 +5,6 @@ import { trpcClient } from "@/lib/trpc";
 import { Music, Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 
 const trpc = trpcClient;
