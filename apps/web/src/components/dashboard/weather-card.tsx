@@ -73,7 +73,7 @@ function WeatherCardContent() {
   const hourlyForecast = getNextHourlyForecast(weatherData);
 
   return (
-    <Card className="col-span-1 bg-card border-border">
+    <Card className="col-span-2 md:col-span-1 bg-card border-border">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center gap-2 text-card-foreground text-lg font-sans">
           <Sun className="h-5 w-5 text-muted-foreground" />

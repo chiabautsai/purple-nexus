@@ -64,7 +64,7 @@ function SystemStatusCardContent() {
   });
 
   return (
-    <Card className="col-span-1 bg-card border-border">
+    <Card className="col-span-2 md:col-span-1 bg-card border-border">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-card-foreground">
           <Settings className="h-5 w-5 text-muted-foreground" />

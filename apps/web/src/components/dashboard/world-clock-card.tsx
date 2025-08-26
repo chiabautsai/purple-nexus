@@ -40,7 +40,7 @@ export function WorldClockCard() {
   }, []);
 
   return (
-    <Card className="col-span-1">
+    <Card className="col-span-2 md:col-span-1">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
           <Globe className="h-5 w-5" />
