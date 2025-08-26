@@ -6,6 +6,7 @@ import { Music, Play, Pause, SkipForward, SkipBack } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Combobox, type ComboboxOption } from "@/components/ui/combobox";
 
 const trpc = trpcClient;
 
@@ -19,6 +20,45 @@ interface MpvStatus {
   duration?: number;
   volume?: number;
 }
+
+// Youtube music
+const mediaUrlList: ComboboxOption[] = [
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_kmPRjHDECIcuVwnKsx2Ng7fyNgFKWNJFs",
+    label: "The Hit List",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_lBNUteBRencHzKelu5iDHwLF6mYqjL-JU",
+    label: "Pop Certified",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_lBGRuQnsG37Akr1CY4SxL0VWFbPrbO4gs",
+    label: "Today's Hip-Hop",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_lJ8xZWiZj2GCw7MArjakb6b0zfvqwldps",
+    label: "Country Hotlist",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_k5vcGRXixxemtzK1eKDS7BeHys7mvYOdk",
+    label: "Today's Rock Hits",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_m0Nsi5Jnn_g6qbvc7fywPRhEv1qN0PcMM",
+    label: "Indie Hits",
+  },
+  {
+    value:
+      "https://www.youtube.com/playlist?list=RDCLAK5uy_mu-BhJj3yO1OXEMzahs_aJVtNWJwAwFEE",
+    label: "R&B",
+  },
+];
 
 export function EntertainmentCard() {
   const [mpvStatus, setMpvStatus] = useState<MpvStatus>({});
@@ -174,12 +214,13 @@ export function EntertainmentCard() {
           </Button>
         </div>
         <div className="flex gap-2">
-          <Input
-            type="text"
-            placeholder="Enter media URL"
+          <Combobox
+            options={mediaUrlList}
             value={mediaUrl}
-            onChange={(e) => setMediaUrl(e.target.value)}
-            className="flex-1"
+            onValueChange={setMediaUrl}
+            placeholder="Choose media..."
+            searchPlaceholder="Search media or add custom..."
+            allowCustom={true}
           />
           <Button onClick={handlePlayNewMedia} disabled={!mediaUrl}>
             Play
