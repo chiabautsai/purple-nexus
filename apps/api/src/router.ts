@@ -216,15 +216,33 @@ export const AppRouter = t.router({
     }
   }),
 
-  // Example subscription for other MPV events (e.g., seek, pause)
-  onSeek: publicProcedure.subscription(async function* (opts) {
-    // Listening to the 'seek' event
-    for await (const [seekData] of on(mpvService, "seek", {
+  onPaused: publicProcedure.subscription(async function* (opts) {
+    // Use `on` to listen for "paused" and forward to client
+    for await (const [paused] of on(mpvService, "paused", {
       signal: opts.signal,
     })) {
-      yield seekData; // Send seek event data to the client
+      yield paused; // Push paused status update to client
     }
   }),
+
+  onTimePos: publicProcedure.subscription(async function* (opts) {
+    // Use `on` to listen for "time-pos" and forward to client
+    for await (const [timePos] of on(mpvService, "timeposition", {
+      signal: opts.signal,
+    })) {
+      yield timePos; // Push time position update to client
+    }
+  }),
+
+  // Example subscription for other MPV events (e.g., seek, pause)
+  // onSeek: publicProcedure.subscription(async function* (opts) {
+  //   // Listening to the 'seek' event
+  //   for await (const [seekData] of on(mpvService, "seek", {
+  //     signal: opts.signal,
+  //   })) {
+  //     yield seekData; // Send seek event data to the client
+  //   }
+  // }),
 });
 
 export type AppRouter = typeof AppRouter;

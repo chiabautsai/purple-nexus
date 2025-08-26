@@ -125,6 +125,21 @@ export function EntertainmentCard() {
     };
   }, []);
 
+  useEffect(() => {
+    const subscription = trpc.onPaused.subscribe(undefined, {
+      onData: (paused) => {
+        setMpvStatus((prev) => ({ ...prev, pause: paused }));
+      },
+      onError: (err) => {
+        console.error("Subscription error:", err);
+      },
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
   const loadMutation = useMutation({
     mutationFn: async (url: string) => await trpc.load.mutate({ content: url }),
     onSuccess: () => console.log("Loaded"),
