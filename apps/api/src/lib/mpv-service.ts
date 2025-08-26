@@ -1,9 +1,16 @@
 import MPV from "node-mpv";
 import { EventEmitter } from "events";
 
+interface MpvStatus {
+  property: string;
+  value: any;
+}
+
 export class MpvService extends EventEmitter {
   private mpv: MPV;
   //   private isInitialized: boolean = false;
+  private idleTimeout: NodeJS.Timeout | null = null;
+  private readonly IDLE_TIMEOUT_MS: number = 300000; // 5 minutes
 
   constructor(options = { audio_only: true }, mpvArgs: string[] = []) {
     super();
@@ -14,16 +21,14 @@ export class MpvService extends EventEmitter {
   }
 
   private setupEventListeners(): void {
-    this.mpv.on("status", (status) => {
+    this.mpv.on("status", (status: MpvStatus) => {
       this.emit("status", status);
+      if (status.property === "idle-active") {
+        this.handleIdleActive(status.value);
+      }
     });
 
     this.mpv.on("stopped", () => {
-      setTimeout(() => {
-        this.quit().catch((err) =>
-          console.error("Failed to quit on stopped:", err)
-        );
-      }, 1000 * 60 * 10);
       this.emit("stopped");
     });
 
@@ -36,6 +41,7 @@ export class MpvService extends EventEmitter {
     });
 
     this.mpv.on("crashed", () => {
+      //   this.isInitialized = false;
       this.emit("crashed");
     });
 
@@ -44,6 +50,28 @@ export class MpvService extends EventEmitter {
       this.emit("quit");
     });
   }
+
+  private handleIdleActive(isIdle: boolean): void {
+    if (isIdle) {
+      if (this.idleTimeout) clearTimeout(this.idleTimeout);
+      this.idleTimeout = setTimeout(async () => {
+        try {
+          const stillIdle = await this.mpv.getProperty("idle-active");
+          if (stillIdle) {
+            await this.quit();
+          }
+        } catch (err) {
+          console.error("Error checking idle-active before quit:", err);
+        }
+      }, this.IDLE_TIMEOUT_MS);
+    } else {
+      if (this.idleTimeout) {
+        clearTimeout(this.idleTimeout);
+        this.idleTimeout = null;
+      }
+    }
+  }
+
   private setupShutdownHooks(): void {
     const shutdown = () => {
       this.quit()
@@ -60,6 +88,7 @@ export class MpvService extends EventEmitter {
       try {
         await this.mpv.start();
         // this.isInitialized = true;
+        await this.mpv.observeProperty("idle-active");
       } catch (error) {
         throw new Error(`Failed to start MPV: ${error}`);
       }
